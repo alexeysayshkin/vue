@@ -6,6 +6,7 @@ import { response } from 'express';
       <h1 class="content__title">
         Каталог
       </h1>
+      
       <span class="content__info">
         {{countProducts}} товаров
       </span>
@@ -13,10 +14,9 @@ import { response } from 'express';
 
     <div class="content__catalog">
       <ProductFilter v-model:price-from="filterPriceFrom" v-model:price-to="filterPriceTo"
-        v-model:catedory-id="filterCategoryId" v-model:color-filter="filterColor" />
-      <Teleport to="#teleport-target">
-        првет телепорт
-      </Teleport>
+        v-model:catedory-id="filterCategoryId" v-model:color-filter="filterColor"   v-model:parametr-filter="filterParametr"/>
+   
+
       <section class="catalog">
         <LoadingPreloader v-if="productsLoading" />
         <div class="error" v-if="productsLoadingFailed">
@@ -50,6 +50,7 @@ export default {
       filterPriceTo: null,
       filterCategoryId: this.$route.params.id,
       filterColor: null,
+      filterParametr:null,
       page: 1,
       productsPerPage: 12,
 
@@ -61,6 +62,7 @@ export default {
     }
   },
   computed: {
+   
     products() {
       return this.productsData ?
         this.productsData.items.map(product => {
@@ -90,7 +92,8 @@ export default {
             limit: this.productsPerPage,
             minPrice: this.filterPriceFrom,
             maxPrice: this.filterPriceTo,
-            colorId: this.filterColor
+        
+            'props[this.filterParametr]': this.filterColor
           }
         })
           .then(response => this.productsData = response.data)
@@ -99,7 +102,7 @@ export default {
 
 
       }, 500);
-    }
+    },
   },
   watch: {
     page() {

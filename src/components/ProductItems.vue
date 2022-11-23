@@ -3,7 +3,7 @@
     <router-link class="catalog__pic" :to="{name: 'product', params: {id:product.id}}">
       <img class="catalog__img" :src="product.image" :alt="product.title">
     </router-link>
-
+<span>{{product.mainProp.code}}</span>
     <h3 class="catalog__title">
       <a href="#" @click.prevent="openQuickVue(product.id)">
         {{ product.title }}
@@ -24,6 +24,8 @@
       </li>
     </ul>
   </li>
+
+
   <BaseModel v-model:open="isQuickVueOpen">
     <ProductQuickVue :product-id="currentProductId"></ProductQuickVue>
   </BaseModel>
