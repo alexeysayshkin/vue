@@ -12,6 +12,8 @@ import { response } from 'express';
       </span>
     </div>
 
+
+
     <div class="content__catalog">
       <ProductFilter v-model:price-from="filterPriceFrom" v-model:price-to="filterPriceTo"
         v-model:catedory-id="filterCategoryId" v-model:color-filter="filterColor"   v-model:parametr-filter="filterParametr"/>
@@ -50,7 +52,7 @@ export default {
       filterPriceTo: null,
       filterCategoryId: this.$route.params.id,
       filterColor: null,
-      filterParametr:null,
+      code:null,
       page: 1,
       productsPerPage: 12,
 
@@ -76,8 +78,22 @@ export default {
     },
     countProducts() {
       return this.productsData ? this.productsData.pagination.total : 0;
+    },
+    fal(){
+      return this.productsData ?
+        this.productsData.items.find(product => {
+          return {
+            ...product
+           
+          }
+        })
+       : []
+    },
+    filterParamet(){
+      return this.fal.mainProp.code;
     }
   },
+
   methods: {
     loadProducts() {
       this.productsData = null,
@@ -93,7 +109,7 @@ export default {
             minPrice: this.filterPriceFrom,
             maxPrice: this.filterPriceTo,
         
-            'props[this.filterParametr]': this.filterColor
+            'props[code:this.filterParamet]': this.filterColor
           }
         })
           .then(response => this.productsData = response.data)
@@ -103,8 +119,13 @@ export default {
 
       }, 500);
     },
+ 
   },
+  
   watch: {
+    code(){
+      this.loadProducts();
+    },
     page() {
       this.loadProducts();
     },
@@ -116,6 +137,7 @@ export default {
     },
     filterCategoryId() {
       this.loadProducts();
+     
     },
     filterColor() {
       this.loadProducts();

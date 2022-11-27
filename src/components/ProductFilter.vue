@@ -39,7 +39,7 @@
       </fieldset>
 
       <fieldset class="form__block">
-        <legend v-for="slugg in slugs" class="form__legend" :key="slugg.id" :value="slugg.title">{{ slugg.title }}</legend>
+        <legend  v-for="slugg in slugs" class="form__legend" :key="slugg.id" :value="slugg.title">{{ slugg.title }}</legend>
         <ul class="check-list" v-for="slugg in slugs" :key="slugg.id">
           <li class="check-list__item" v-for="slu in slugg.availableValues" :key="slu">
             <label class="check-list__label">
