@@ -39,7 +39,7 @@
       </fieldset>
 
       <fieldset class="form__block">
-        <legend  v-for="slugg in slugs" class="form__legend" :key="slugg.id" :value="slugg.title">{{ slugg.title }}</legend>
+        <legend  class="form__legend" :key="tipe"  :value="tipe">{{tipe}}</legend>
         <ul class="check-list" v-for="slugg in slugs" :key="slugg.id">
           <li class="check-list__item" v-for="slu in slugg.availableValues" :key="slu">
             <label class="check-list__label">
@@ -100,6 +100,19 @@ export default {
     slugs() {
       return this.categorieSlagsData ? this.categorieSlagsData.productProps : [];
     },
+    catSeries(){
+      return this.categorieSlagsData ?
+        this.categorieSlagsData.productProps.find(item=> {
+          return {
+            ...item
+           
+          }
+        })
+       : []
+    },
+    tipe(){
+      return this.catSeries.title
+    }
 
   },
   watch: {
@@ -116,6 +129,9 @@ export default {
       this.currentColor = value;
     },
 
+    catFilter(value) {
+      this.curCol = value;
+    },
 
 
   },
@@ -144,7 +160,6 @@ export default {
         .then(response => this.categorieSlagsData = response.data)
     },
     loadColors() {
-
       axios.get(API_BASE_URL + "/api/colors")
         .then(response => this.colorsData = response.data)
     },
