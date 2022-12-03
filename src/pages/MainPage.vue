@@ -2,13 +2,12 @@ import { response } from 'express';
 <template>
   <main class="content container">
     <div class="content__top content__top--catalog">
-     
+
       <h1 class="content__title">
         Каталог
       </h1>
-      
       <span class="content__info">
-        {{countProducts}} товаров
+        {{ countProducts }} товаров
       </span>
     </div>
 
@@ -16,8 +15,8 @@ import { response } from 'express';
 
     <div class="content__catalog">
       <ProductFilter v-model:price-from="filterPriceFrom" v-model:price-to="filterPriceTo"
-        v-model:catedory-id="filterCategoryId" v-model:color-filter="filterColor"   v-model:parametr-filter="filterParametr"/>
-   
+        v-model:catedory-id="filterCategoryId" v-model:color-filter="filterColor" @category="test" />
+
 
       <section class="catalog">
         <LoadingPreloader v-if="productsLoading" />
@@ -52,7 +51,7 @@ export default {
       filterPriceTo: null,
       filterCategoryId: this.$route.params.id,
       filterColor: null,
-      code:null,
+      code: null,
       page: 1,
       productsPerPage: 12,
 
@@ -64,7 +63,7 @@ export default {
     }
   },
   computed: {
-   
+
     products() {
       return this.productsData ?
         this.productsData.items.map(product => {
@@ -79,22 +78,12 @@ export default {
     countProducts() {
       return this.productsData ? this.productsData.pagination.total : 0;
     },
-    fal(){
-      return this.productsData ?
-        this.productsData.items.find(product => {
-          return {
-            ...product
-           
-          }
-        })
-       : []
-    },
-    filterParamet(){
-      return this.fal.mainProp.code;
-    }
   },
 
   methods: {
+    test(category) {
+      this.code = category.code;
+    },
     loadProducts() {
       this.productsData = null,
       this.productsLoading = true;
@@ -108,8 +97,8 @@ export default {
             limit: this.productsPerPage,
             minPrice: this.filterPriceFrom,
             maxPrice: this.filterPriceTo,
-        
-            'props[code:this.filterParamet]': this.filterColor
+
+            [`props[${this.code}]`]: this.filterColor,
           }
         })
           .then(response => this.productsData = response.data)
@@ -119,11 +108,11 @@ export default {
 
       }, 500);
     },
- 
+
   },
-  
+
   watch: {
-    code(){
+    code() {
       this.loadProducts();
     },
     page() {
@@ -137,7 +126,7 @@ export default {
     },
     filterCategoryId() {
       this.loadProducts();
-     
+
     },
     filterColor() {
       this.loadProducts();

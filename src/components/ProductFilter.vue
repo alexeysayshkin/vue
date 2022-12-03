@@ -2,7 +2,7 @@
   <aside class="filter">
     <h2 class="filter__title">Фильтры</h2>
 
-    <form class="filter__form form" action="#" method="get" @submit.prevent="submit() ; loadCategorisSlag()">
+    <form class="filter__form form" action="#" method="get" @submit.prevent="submit()">
       <fieldset class="form__block">
         <legend class="form__legend">Цена</legend>
         <label class="form__label form__label--price">
@@ -18,28 +18,15 @@
       <fieldset class="form__block">
         <legend class="form__legend">Категория</legend>
         <label class="form__label form__label--select">
-          <select class="form__select" name="category" v-model.number="currentCatedoryId">
+          <select class="form__select" name="category" v-model.number="currentCatedoryId" @change="loadCategorisSlag()">
             <option value="0">Все категории</option>
             <option :value="category.id" v-for="category in categories" :key="category.id">{{ category.title }}</option>
           </select>
         </label>
       </fieldset>
-      <fieldset class="form__block" v-if="catedoryId >10000 ">
-        <legend v-for="slugg in slugs" class="form__legend" :key="slugg.id">{{ slugg.title }}</legend>
-        <ul class="colors">
-          <li class="colors__item" v-for="color in colors" :key="color.id">
-            <label class="colors__label">
-              <input class="colors__radio sr-only" type="checkbox" name="color" :value="color.title"
-                v-model="currentColor">
-              <span class="colors__value" :style="{ backgroundColor: color.code }">
-              </span>
-            </label>
-          </li>
-        </ul>
-      </fieldset>
 
       <fieldset class="form__block">
-        <legend  class="form__legend" :key="tipe"  :value="tipe">{{tipe}}</legend>
+        <legend class="form__legend" v-for="slugg in slugs" :key="slugg.id">{{ slugg.title }}</legend>
         <ul class="check-list" v-for="slugg in slugs" :key="slugg.id">
           <li class="check-list__item" v-for="slu in slugg.availableValues" :key="slu">
             <label class="check-list__label">
@@ -56,7 +43,6 @@
 
         </ul>
       </fieldset>
-      <div> {{ categoryParams }}</div>
       <button class="filter__submit button button--primery" type="submit">
         Применить
       </button>
@@ -79,40 +65,21 @@ export default {
       currentPriceTo: null,
       currentCatedoryId: 0,
       currentColor: [],
-      curCol: null,
-
       categoriesData: null,
-      colorsData: {},
       categorieSlagsData: null,
 
 
     }
   },
 
-  props: ['priceFrom', 'priceTo', 'catedoryId', 'colorFilter', ],
+  props: ['priceFrom', 'priceTo', 'catedoryId', 'colorFilter',],
   computed: {
     categories() {
       return this.categoriesData ? this.categoriesData.items : [];
     },
-    colors() {
-      return this.colorsData ? this.colorsData.items : []
-    },
     slugs() {
       return this.categorieSlagsData ? this.categorieSlagsData.productProps : [];
     },
-    catSeries(){
-      return this.categorieSlagsData ?
-        this.categorieSlagsData.productProps.find(item=> {
-          return {
-            ...item
-           
-          }
-        })
-       : []
-    },
-    tipe(){
-      return this.catSeries.title
-    }
 
   },
   watch: {
@@ -127,10 +94,6 @@ export default {
     },
     colorFilter(value) {
       this.currentColor = value;
-    },
-
-    catFilter(value) {
-      this.curCol = value;
     },
 
 
@@ -155,19 +118,17 @@ export default {
       axios.get(API_BASE_URL + "/api/productCategories")
         .then(response => this.categoriesData = response.data)
     },
-    loadCategorisSlag() {
-      axios.get(API_BASE_URL + "/api/productCategories/" + this.currentCatedoryId)
-        .then(response => this.categorieSlagsData = response.data)
+    async loadCategorisSlag() {
+      await axios.get(API_BASE_URL + "/api/productCategories/" + this.currentCatedoryId)
+        .then(response => this.categorieSlagsData = response.data);
+      this.$emit('category', this.categorieSlagsData.productProps[0]);
     },
-    loadColors() {
-      axios.get(API_BASE_URL + "/api/colors")
-        .then(response => this.colorsData = response.data)
-    },
+ 
   },
 
   created() {
     this.loadCategoris();
-    this.loadColors();
+    
   }
 }
 </script>
