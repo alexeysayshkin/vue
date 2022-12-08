@@ -43,10 +43,10 @@
 
         </ul>
       </fieldset>
-      <button class="filter__submit button button--primery" type="submit">
+      <button class="filter__submit button button--primery" type="submit" >
         Применить
       </button>
-      <button class="filter__reset button button--second" type="button" @click.prevent="reset">
+      <button class="filter__reset button button--second" type="button" @click.prevent="reset" v-if=" currentPriceFrom>0 || currentPriceTo>0 || currentCatedoryId!=0">
         Сбросить
       </button>
     </form>

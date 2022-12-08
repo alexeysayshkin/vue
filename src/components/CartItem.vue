@@ -1,10 +1,10 @@
 <template>
     <li class="cart__item product">
         <div class="product__pic">
-            <img :src="item.product.product.preview.file.url" width="120" height="120" alt="item.product.title">
+            <img :src="item.product.productOffer.product.preview.file.url" width="120" height="120" alt="item.product.title">
         </div>
         <h3 class="product__title">
-            {{ item.product.title }}
+            {{ item.product.productOffer.product.title }}({{item.product.color.color.title}})
         </h3>
 
         <span class="product__code">
@@ -32,6 +32,7 @@ import numberFormat from '@/helpers/numberFormat';
 import ProductCounter from '@/components/ProductCounter.vue';
 
 
+
 export default {
     data() {
         return { cartProductPrice: null }
@@ -46,6 +47,7 @@ export default {
             return numberFormat(this.item.amount * this.item.product.price)
 
         },
+        
         productAmount: {
             get() {
                 return this.item.amount;

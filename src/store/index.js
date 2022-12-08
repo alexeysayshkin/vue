@@ -50,7 +50,7 @@ export default createStore({
             state.cartProducts = state.cartProductsData.map(item => {
                 return {
                     basketItemId: item.id,
-                    productId: item.productOffer.id,
+                    productId: item.id,
                     amount: item.quantity,
                 }
             });
@@ -60,7 +60,7 @@ export default createStore({
     getters: {
         cartDetailProducts(state) {
             return state.cartProducts.map(item => {
-                const product = state.cartProductsData.find(p => p.productOffer.id === item.productId).productOffer;
+                const product = state.cartProductsData.find(p => p.id === item.productId);
                 return {
                     ...item,
                     product: {
@@ -72,7 +72,8 @@ export default createStore({
         },
         cartTotalPrice(state, getters) {
             return getters.cartDetailProducts.reduce((acc, item) => (item.product.price * item.amount) + acc, 0)
-        }
+        },
+
     },
     actions: {
         loadOrderInfo(context, orderId) {
